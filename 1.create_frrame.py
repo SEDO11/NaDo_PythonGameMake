@@ -1,3 +1,4 @@
+#게임 창 만들기
 import pygame
 
 pygame.init() # 초기화 (반드시 필요)
