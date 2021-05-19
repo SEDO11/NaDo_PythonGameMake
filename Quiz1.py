@@ -11,7 +11,7 @@ screen_height = 640 # 세로 크기
 screen = pygame.display.set_mode((screen_width,screen_height)) # 화면
 
 #화면 타이틀(제목) 설정
-pygame.display.set_caption("SEDO Game") #게임 이름
+pygame.display.set_caption("SEDO 똥피하기 Game") #게임 이름
 
 clock = pygame.time.Clock()
 fps = 30
@@ -38,16 +38,17 @@ enemy_size = enemy.get_rect().size # 똥의 크기 구함
 enemy_width = enemy_size[0] #똥의 가로크기
 enemy_height = enemy_size[1] #똥의 세로크기
 enemy_x_pos = randint(1, screen_width - enemy_width)
-enemy_y_pos = randint(1, (screen_height / 4))
+enemy_y_pos = 0
 
 #폰트 정의
 game_font = pygame.font.Font(None, 40) # 폰트 객체 생성 (폰트 종류, 크기)
 
 #시작 시간
-start_time = 0
-
-#시작 시간
 start_ticks = pygame.time.get_ticks() # 현재 틱 정보를 받아옴
+timer = 0
+
+# 점수
+score = 0
 
 #이벤트 루프
 running = True # 게임이 진행중인가 확인하는 변수
@@ -69,7 +70,7 @@ while running:
                 to_x = 0 # 움직이지 않음
 
     # 캐릭터의 이동속도 유지
-    character_x_pos += to_x * dt 
+    character_x_pos += to_x * dt         
 
     # 객체가 화면을 빠져나가지 못 하도록 설정
     if character_x_pos < 0:
@@ -86,24 +87,36 @@ while running:
     enemy_rect.left = enemy_x_pos
     enemy_rect.top = enemy_y_pos
 
+    #똥이 랜덤으로 내려옴
+    en_y = 0.5
+    enemy_y_pos += en_y * dt
+    if enemy_y_pos >= screen_height:
+        enemy_x_pos = randint(1, screen_width - enemy_width + 1) # 화면상의 가로축에서 랜덤으로 나타남
+        score += 1 # 똥을 피하면 점수 상승
+        enemy_y_pos = 0 # 똥이 끝까지 내려왔을경우 다시 위로 올라감
+
     #충돌 체크
     if character_rect.colliderect(enemy_rect): # colliderect -> 캐릭터의 모양 기준으로 충돌이 있었는가
         print("충돌했어요")
         running = False
 
-    #타이머 집어넣기, 경과시간 계산
-    elapsed_time = (pygame.time.get_ticks() + start_ticks) / 1000 # 경과 시간을 1000으로 나누어서 표시
-    timer = game_font.render(str(int(start_time - elapsed_time)), True, (255, 255, 255)) # 출력할 글자, True, 글자 색상
-
-    screen.blit(timer, (10, 10))
-
+    #여기다가 점수 코드 쓰면 안뜸
     screen.blit(background, (0, 0)) #배경 그리기
 
     screen.blit(character, (character_x_pos, character_y_pos)) #캐릭터 그리기
 
     screen.blit(enemy, (enemy_x_pos, enemy_y_pos)) #똥 그리기
 
+    #점수
+    scoreout = game_font.render("Score: " + str(score), True, (255, 255, 255))
+    screen.blit(scoreout, (10, 10))
+
+    #타이머 집어넣기, 경과시간 계산
+    timer = (pygame.time.get_ticks() - start_ticks) / 1000 # 경과 시간을 1000으로 나누어서 표시
+    timerout = game_font.render("Time: " + str(int(timer + 1)), True, (255, 255, 255)) # 출력할 글자, True, 글자 색상
+    screen.blit(timerout, (10, 50))
+
     pygame.display.update() # 게임화면을 다시 그리기, 이게 있어야 배경화면이 그려짐
 
-# pygame 종료
+# pygame 종료 
 pygame.quit()
