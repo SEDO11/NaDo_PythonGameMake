@@ -44,7 +44,6 @@ enemy_y_pos = 0
 game_font = pygame.font.Font(None, 40) # 폰트 객체 생성 (폰트 종류, 크기)
 
 #시작 시간
-start_ticks = pygame.time.get_ticks() # 현재 틱 정보를 받아옴
 timer = 0
 
 # 점수
@@ -112,7 +111,7 @@ while running:
     screen.blit(scoreout, (10, 10))
 
     #타이머 집어넣기, 경과시간 계산
-    timer = (pygame.time.get_ticks() - start_ticks) / 1000 # 경과 시간을 1000으로 나누어서 표시
+    timer = pygame.time.get_ticks() / 1000 # 경과 시간을 1000으로 나누어서 표시
     timerout = game_font.render("Time: " + str(int(timer + 1)), True, (255, 255, 255)) # 출력할 글자, True, 글자 색상
     screen.blit(timerout, (10, 50))
 
